@@ -1,0 +1,114 @@
+S => NOUN
+A-PRO => ADJF,Apro
+# Anum не всегда соответствует, иногда Apro
+ANUM => ADJF,Anum
+A,obsc,abbr => ADJF
+A,n,inan => ADJF,neut
+A,n,anim => ADJF,neut
+A,plen => ADJF
+A,brev => ADJS
+A,comp2 => COMP,Cmp2
+A,supr => COMP,Supr
+A,comp => COMP
+
+ADV,comp2 => COMP,Cmp2
+ADV,comp => COMP
+ADV => ADVB
+ADV-PRO => ADVB
+
+PRAEDIC,comp => COMP
+PRAEDIC => PRED,pres
+PRAEDIC-PRO => NPRO
+
+# NUM,comp => ADVB
+NUM,comp => COMP
+NUM,comp2 => COMP,Cmp2
+
+V,inf => INFN
+V,partcp,tran,brev => PRTS
+V,partcp,act => PRTF,actv
+V,partcp,med => PRTF,actv
+V,partcp,brev => PRTS
+V,partcp,plen => PRTF
+# иногда у V,partcp нет ни brev, ни plen; тогда по умолчанию - PRTF
+V,partcp => PRTF
+V,ger => GRND
+V,1p,imper,pl => VERB,impr,incl,sing
+V,1p,imper2,pl => VERB,impr,incl,plur
+V,2p,imper => VERB,impr,excl
+V,1p,imper => VERB,impr,incl
+V => VERB
+
+NUM => NUMR
+
+S-PRO,anim,1p => NPRO,1per
+S-PRO,3p => NPRO,Anph,3per
+# plt - Pluralia Tantum, запись которой омонимична записи мн.ч. для S-PRO
+S-PRO,plt => NPRO,plur
+S-PRO => NPRO
+
+PR => PREP
+PART => PRCL
+INTJ => INTJ
+PARENTH => CONJ,Prnt
+CONJ => CONJ
+INIT => NOUN,Init,Fixd
+
+abbr => Fixd,Abbr
+
+m-f => Ms-f
+m => masc
+f => femn
+n => neut
+
+anim,1p => 1per
+anim => anim
+inan => inan
+
+sg => sing
+pl => plur
+# for pl= handling
+plt => GNdr,Pltm,plur
+0 => Fixd
+
+nom => nomn
+gen => gent
+dat => datv
+acc => accs
+ins => ablt
+loc => loct
+voc => voct
+gen2 => gen2
+acc2 => acc2
+loc2 => loc2
+
+pf => perf
+ipf => impf
+
+tran => tran
+intr => intr
+
+pass => pssv
+
+1p => 1per
+2p => 2per
+3p => 3per
+
+praes => pres
+praet => past
+fut => futr
+
+indic => indc
+imper => impr
+
+patrn => Patr
+persn => Name
+famn => Surn
+
+ANUM,ciph => ROMN
+
+PNCT => PNCT
+NUM,ciph => NUMB
+
+# delimiter
+= => |
