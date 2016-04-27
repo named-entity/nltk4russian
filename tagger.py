@@ -90,7 +90,7 @@ class PyMorphyTagger(SequentialBackoffTagger):
     A tagger that assigns the most frequent tag according to PyMorphy2 statistics.
     """
 
-    def __init__(self):
+    def __init__(self, train=None):
         self._morph = pymorphy2.MorphAnalyzer()
         SequentialBackoffTagger.__init__(self, None)
 

@@ -33,12 +33,12 @@ p.add_argument('-t', help='Training corpus in tsv format')
 p.add_argument('-tab', default=False, action='store_true', help='test corpus is in tsv format.')
 args = p.parse_args()
 
-if args.t:
-    with open(args.t, 'r') as tc:
-        sents = list(read_corpus_to_nltk(tc))
-else:
-    corpus = CorpusReader('data/annot.opcorpora.no_ambig.xml')
-    sents = list(corpus.iter_tagged_sents())
+#if args.t:
+with open(args.t, 'r') as tc:
+    sents = list(read_corpus_to_nltk(tc))
+#else:
+#    corpus = CorpusReader('../data/annot.opcorpora.no_ambig.xml')
+#    sents = list(corpus.iter_tagged_sents())
 
 sents = filter(lambda x: len(x), sents)
 
