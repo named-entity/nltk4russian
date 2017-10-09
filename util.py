@@ -26,7 +26,8 @@ def read_corpus_to_nltk(inc):
             continue
         t = t.split('\t')
         try:
-            token = (t[1], t[2].split()[1], ','.join(t[2].split(' ')[2:]))
+            # token = (t[1], t[2].split()[1], ','.join(t[2].split(' ')[2:]))
+            token = (t[1], ','.join(t[2].split(' ')[2:]))
             sent.append(token)
         except:
             continue
