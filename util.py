@@ -1,9 +1,13 @@
 # coding: utf-8
 
 import codecs
-from itertools import izip
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from pymorphy2 import MorphAnalyzer
+
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
 
 DELTAGS = ['impf', 'perf', 'excl', 'GNdr', 'tran', 'intr', 'anim', 'inan', 'real', 'intg', 'Infr', 'Slng', 'Arch',
           'Litr', 'Erro', 'Dist', 'Ques', 'Dmns', 'V-be', 'V-en', 'V-ie', 'V-bi', 'Fimp', 'Prdx', 'Coun', 'Coll',
@@ -15,7 +19,10 @@ DELTAGS = ['impf', 'perf', 'excl', 'GNdr', 'tran', 'intr', 'anim', 'inan', 'real
 def read_corpus_to_nltk(inc):
     sent = []
     for t in inc:
-        t = t.rstrip().decode('utf-8')
+        # try:
+        #     t = t.rstrip().decode('utf-8')
+        # except AttributeError:
+        t = t.rstrip()
         if not t:
             continue
         if t == u'sent':
@@ -40,7 +47,8 @@ def read_test_corpus(fn):
         line = line.rstrip('\n')
 # считаем, что текст у нас уже токенизованный
 #        line = word_tokenize(line)
-        line = line.decode('utf-8').split()
+#         line = line.decode('utf-8').split()
+        line = line.split()
 # разбираем слова по словарю, возьмем только первый разбор от pymorphy
         parses = [m.parse(token) for token in line]
         if line:
@@ -52,7 +60,10 @@ def read_tab_corpus(inc):
     m = MorphAnalyzer()
     sent = []
     for t in inc:
-        t = t.rstrip().decode('utf-8')
+        # try:
+        #     t = t.rstrip().decode('utf-8')
+        # except AttributeError:
+        t = t.rstrip()
         if not t:
             continue
         if t == u'sent':
@@ -139,7 +150,7 @@ def get_tags_tokens_from_tab(sent, withcommas=False, first = False):
         try:
             info = ws[2].split()[2:]
         except:
-            print ws
+            print(ws)
         tag = prettytag(info, withcommas, first)
         tags.append(tag)
 

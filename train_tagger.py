@@ -6,10 +6,11 @@
 Тестовый корпус можно давать в двух форматах: tsv (слово, лемма, разбор), между предложениями - SENT
 и plain text (токенизованный)
 """
+from __future__ import print_function
 
-
-from opencorpora import CorpusReader
+# from opencorpora import CorpusReader
 from argparse import ArgumentParser
+import codecs
 from nltk.tag.sequential import TrigramTagger, BigramTagger, UnigramTagger
 import sys
 
@@ -43,7 +44,7 @@ with open(args.t, 'r') as tc:
 sents = filter(lambda x: len(x), sents)
 
 if not args.full:
-    print >> sys.stderr, 'Training %s on POS data...' % taggers[args.name].__name__
+    print('Training %s on POS data...' % taggers[args.name].__name__, file=sys.stderr)
     pos_sents = []
     for s in sents:
         pos = []
@@ -54,22 +55,22 @@ if not args.full:
     tagger = taggers[args.name](train=pos_sents)
 
 else:
-    print >> sys.stderr, 'Training %s on full tags...' % taggers[args.name].__name__
+    print('Training %s on full tags...' % taggers[args.name].__name__, file=sys.stderr)
     tagger = taggers[args.name](sents)
 
 if args.tab:
     read_test_corpus = read_tab_corpus
 
-with open(args.file, 'r') as f:
-    with open(args.o, 'w') as output:
+with codecs.open(args.file, 'r', encoding='utf-8') as f:
+    with codecs.open(args.o, 'w', encoding='utf-8') as output:
         for sentence in read_test_corpus(f):
             tokens, tags = zip(*sentence)
-            print >> output, 'sent'
+            print('sent', file=output)
             for i, t in enumerate(tagger.tag(tokens)):
                 if not t[1]:
-                    print >> output, u'\t'.join((str(i), t[0],
-                                      u'%d d %s' % (i, str(tags[i])))).encode('utf-8')
+                    print(u'\t'.join((str(i), t[0],
+                          u'%d d %s' % (i, str(tags[i])))), file=output)
                 else:
-                    print >> output, u'\t'.join((str(i), t[0],
-                                      u'%d d %s' % (i, t[1]))).encode('utf-8')
-            print >> output, '/sent'
+                    print(u'\t'.join((str(i), t[0],
+                          u'%d d %s' % (i, t[1]))), file=output)
+            print('/sent', file=output)

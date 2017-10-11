@@ -1,5 +1,7 @@
 # coding: utf-8
 
+from __future__ import print_function
+
 from nltk.probability import FreqDist, ConditionalFreqDist
 from nltk.tag.sequential import ContextTagger, SequentialBackoffTagger, NgramTagger
 import pymorphy2
@@ -23,7 +25,7 @@ class PMContextTagger(NgramTagger):
         context = self.context(tokens, index, history)
 
         s = self._morph.parse(tokens[index])
-        tags = [unicode(x.tag).replace(u' ', u',') for x in s]
+        tags = [x.tag.__str__().replace(u' ', u',') for x in s]
         if len(tags) == 0:
             return None
         if (len(tags) == 1) or not (context in self._contexts_to_tags.keys()):
@@ -81,9 +83,9 @@ class PMContextTagger(NgramTagger):
             size = len(self._context_to_tag)
             backoff = 100 - (hit_count * 100.0)/ token_count
             pruning = 100 - (size * 100.0) / len(fd.conditions())
-            print "[Trained Unigram tagger:",
-            print "size=%d, backoff=%.2f%%, pruning=%.2f%%]" % (
-                size, backoff, pruning)
+            print("[Trained Unigram tagger:")
+            print("size=%d, backoff=%.2f%%, pruning=%.2f%%]" % (
+                  size, backoff, pruning))
 
 class PyMorphyTagger(SequentialBackoffTagger):
     """
@@ -96,7 +98,7 @@ class PyMorphyTagger(SequentialBackoffTagger):
 
     def choose_tag(self, tokens, index, history):
         s = self._morph.parse(tokens[index])
-        tags = [unicode(x.tag).replace(u' ', u',') for x in s]
+        tags = [x.tag.__str__().replace(u' ', u',') for x in s]
         if len(tags) > 0:
             self._tag = tags[0]
         else:

@@ -1,4 +1,6 @@
 #coding: utf-8
+from __future__ import print_function
+
 from argparse import ArgumentParser
 from itertools import chain
 import sys
@@ -62,4 +64,4 @@ def precision(atagged, mtagged):
 inc = list(chain(*[get_tags_tokens_from_tab(x, withcommas=True)[2] for x in get_sentences_from_tab(args.test)]))
 ref = list(chain(*[get_tags_tokens_from_tab(x, withcommas=True)[2] for x in get_sentences_from_tab(args.gold)]))
 a, w = accuracy(inc, ref, verbose=True)
-print a
+print(a)
