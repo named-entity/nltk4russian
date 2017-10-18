@@ -6,6 +6,13 @@
 
 `pip install nltk`
 
+## Установка
+Скачайте и распакуйте репозиторий или склонируйте его:
+
+`git clone https://github.com/named-entity/nltk4russian.git`
+Затем перейдите в папку *nltk4russian* запустите установочный скрипт:
+
+`python setup.py install`
 
 ## Теггеры
 В модуле реализованы два варианта разметки:
@@ -18,9 +25,10 @@
 
 ### 1. PMContextTagger и PymorphyTagger
 
-    Теггеры наследуются от `nltk.tag.sequential.NgramTagger`, поэтому описание методов можно смотреть в [nltk.tag](http://www.nltk.org/api/nltk.tag.html).
-    Сейчас у модуля нет setup-скрипта, поэтому можно добавить путь к нему в `sys.path` и импортировать обычным образом:
-    `from nltk2russian.tagger import PMContextTagger`
+Теггеры наследуются от `nltk.tag.sequential.NgramTagger`, поэтому описание методов можно смотреть в [nltk.tag](http://www.nltk.org/api/nltk.tag.html).
+Импортировать их можно обычным образом:
+
+`from nltk4russian.tagger import PMContextTagger`
 
 ### 2. Консольное приложение train_tagger
 

@@ -8,14 +8,14 @@
 """
 from __future__ import print_function
 
-# from opencorpora import CorpusReader
-from argparse import ArgumentParser
 import codecs
-from nltk.tag.sequential import TrigramTagger, BigramTagger, UnigramTagger
 import sys
+from argparse import ArgumentParser
 
-from tagger import PMContextTagger, PyMorphyTagger
-from util import read_corpus_to_nltk, read_tab_corpus, read_test_corpus
+from nltk.tag.sequential import TrigramTagger, BigramTagger, UnigramTagger
+
+from nltk4russian.tagger import PMContextTagger, PyMorphyTagger
+from nltk4russian.util import read_corpus_to_nltk, read_tab_corpus, read_test_corpus
 
 taggers = {
     '3gram': TrigramTagger,

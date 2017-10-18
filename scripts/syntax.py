@@ -2,7 +2,7 @@
 # Python 3, NLTK, pymorphy2
 # -*- coding: utf-8 -*- 
 import nltk
-from nltk import *
+from nltk import load_parser, word_tokenize
 import pymorphy2 as pm
 import codecs
 #import re

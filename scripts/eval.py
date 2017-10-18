@@ -1,10 +1,11 @@
 #coding: utf-8
 from __future__ import print_function
 
+import sys
 from argparse import ArgumentParser
 from itertools import chain
-import sys
-from util import read_corpus_to_nltk, get_sentences_from_tab, get_tags_tokens_from_tab, accuracy
+
+from nltk4russian.util import get_sentences_from_tab, get_tags_tokens_from_tab, accuracy
 #from nltk.metrics.scores import accuracy
 
 _misc = ('Infr', 'Slng', 'Arch', 'Litr', 'Erro', 'Dist', 'Ques', 'Dmns', 'V-be', 'V-en', 'V-ie', 'V-bi',
