@@ -10,6 +10,7 @@
 Скачайте и распакуйте репозиторий или склонируйте его:
 
 `git clone https://github.com/named-entity/nltk4russian.git`
+
 Затем перейдите в папку *nltk4russian* запустите установочный скрипт:
 
 `python setup.py install`
