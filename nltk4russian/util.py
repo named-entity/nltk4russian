@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import codecs
+import re
 from bs4 import BeautifulSoup
 from pymorphy2 import MorphAnalyzer
 
@@ -13,7 +14,7 @@ DELTAGS = ['impf', 'perf', 'excl', 'GNdr', 'tran', 'intr', 'anim', 'inan', 'real
           'Litr', 'Erro', 'Dist', 'Ques', 'Dmns', 'V-be', 'V-en', 'V-ie', 'V-bi', 'Fimp', 'Prdx', 'Coun', 'Coll',
           'V-sh', 'Af-p', 'Inmx', 'Vpre', 'Anph', 'Init', 'Impe', 'Uimp', 'Mult', 'Refl', 'Abbr', 'Name', 'Surn',
           'Patr', 'Geox', 'Orgn', 'Trad', 'Subx', 'Supr', 'Qual', 'Apro', 'Anum', 'Poss', 'V-ey', 'V-oy', 'Cmp2',
-          'V-ej', 'Ms-f', 'Sgtm', 'Pltm', 'Fixd']
+          'V-ej', 'Ms-f', 'Sgtm', 'Pltm', 'Fixd', '_']
 
 
 def read_corpus_to_nltk(inc):
@@ -85,6 +86,8 @@ def read_tab_corpus(inc):
 
 def prettytag(tagslist, withcommas=False, first=False):
     # TODO: проверить и оптимизировать
+    pos_pattern = re.compile('[A-Z]{4}', re.U)
+    pos = ""
     if first and len(tagslist):
         return tagslist[0].split(',')[0].replace('NUMR', 'NUMB')
     info1 = []
@@ -96,11 +99,13 @@ def prettytag(tagslist, withcommas=False, first=False):
         tagslist1 = tagslist
     for tag in tagslist1:
         if not (tag in DELTAGS):
-            info1.append(tag)
-        info2 = info1[1:]
-        info2.sort()
-        if len(info1):
-            info1 = [info1[0].replace('NUMR', 'NUMB')] + info2
+            if pos_pattern.match(tag):
+                pos = tag
+            elif tag not in info1:
+                info1.append(tag)
+    info1.sort()
+    if len(info1) or pos:
+        info1 = [pos.replace('NUMR', 'NUMB')] + info1
 
     restag = u','.join(info1)
     return restag
@@ -137,7 +142,7 @@ def get_sentences(fn):
     return ss
 
 
-def get_tags_tokens_from_tab(sent, withcommas=False, first = False):
+def get_tags_tokens_from_tab(sent, withcommas=False, first=False):
     tags = []
     tokens = []
 
@@ -171,17 +176,29 @@ def get_sentences_from_tab(fn):
     return ss
 
 
-def accuracy(reference, test, verbose=False):
+def accuracy(reference, test, verbose=False, test_type='full'):
     if len(reference) != len(test):
         raise ValueError("Lists must have the same length.")
     num_correct = 0
     if verbose:
         wrongs = []
     for x, y in izip(reference, test):
-        if x == y:
-            num_correct += 1
-        elif verbose:
-            wrongs.append((x, y))
+        if test_type == 'full':
+            x_ = set(x[1].split(','))
+            y_ = set(y[1].split(','))
+            if x_ <= y_ or y_ <= x_:
+                num_correct += 1
+            else:
+                if verbose:
+                    wrongs.append((x, x_, y, y_))
+        if test_type== 'pos':
+            x_ = x[1].split(',')[0]
+            y_ = y[1].split(',')[0]
+            if x_ == y_:
+                num_correct += 1
+            else:
+                if verbose:
+                    wrongs.append((x, x_, y, y_))
     if verbose:
         return float(num_correct) / len(reference), wrongs
     return float(num_correct) / len(reference)
