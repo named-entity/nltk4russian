@@ -10,10 +10,14 @@ import pymorphy2
 class PMContextTagger(NgramTagger):
     """
     """
-    def __init__(self, train=None, model=None,
+    def __init__(self, train=None, model=None, type_='pos',
                  backoff=None, cutoff=0, verbose=False):
         self._morph = pymorphy2.MorphAnalyzer()
-        self._contexts_to_tags = (model if model else {})
+        self._contexts_to_tags = (model if model else {})  # mapping to store "useful" contexts
+        if type_ not in ["pos", "full"]:
+            raise Exception("Unknown tagset type `%s`!" % type_)
+        self.type = type_
+
         NgramTagger.__init__(self, 1, train, model,
                              backoff, cutoff, verbose)
 
@@ -21,11 +25,33 @@ class PMContextTagger(NgramTagger):
         tag_context = tuple(history[max(0,index-1):index])
         return tag_context
 
+    @staticmethod
+    def _convert_tag(tags):
+        result = []
+        for t in tags:
+            result.append(",".join(sorted(t.tag.__str__().replace(" ", ",").split(","))))
+        return result
+
+    @staticmethod
+    def _leave_pos_tags(tags):
+        result = []
+        for t in tags:
+            if t.tag.POS is not None:
+                result.append(t.tag.POS)
+            else:
+                result.append(t.tag.__str__())
+        return result
+
     def choose_tag(self, tokens, index, history):
         context = self.context(tokens, index, history)
 
-        s = self._morph.parse(tokens[index])
-        tags = [x.tag.__str__().replace(u' ', u',') for x in s]
+        if self.type == "full":
+            s = self._morph.parse(tokens[index])
+            tags = self._convert_tag(s)
+        if self.type == "pos":
+            s = self._morph.parse(tokens[index])
+            tags = self._leave_pos_tags(s)
+
         if len(tags) == 0:
             return None
         if (len(tags) == 1) or not (context in self._contexts_to_tags.keys()):
@@ -33,11 +59,13 @@ class PMContextTagger(NgramTagger):
 
         tagsconts = FreqDist()
         for tag in tags:
-            #print 'TAG: ', tag
-            #print tokens[index]
+            # print('TAG: ', tag)
+            # print(tokens[index])
+            # TODO: look for most similar tag in case of full tagset
+            # e.g. `_contexts_to_tags` for given context contains NOUN, but in plural
             tagsconts[tag] = self._contexts_to_tags[context].get(tag, 0)
 
-            #print 'PROB: | ', context, tagsconts[tag]
+            # print('PROB: | ', context, tagsconts[tag])
         best_tag = tagsconts.max()
         if tagsconts[best_tag] == 0:
             return tags[0]
@@ -56,6 +84,7 @@ class PMContextTagger(NgramTagger):
         fd = ConditionalFreqDist()
         for sentence in tagged_corpus:
             tokens, tags = zip(*sentence)
+            tags = [",".join(sorted(x.split(","))) for x in tags]
             for index, (token, tag) in enumerate(sentence):
                 # Record the event.
                 token_count += 1
