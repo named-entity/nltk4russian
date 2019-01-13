@@ -1,7 +1,7 @@
 # Программа использует морфологические данные разбора PyMorphy2 и синтаксические правила АОТ для автоматического синтаксического разобра текста на русском языки в NLTK.
 # Python 3, NLTK, pymorphy2
 # -*- coding: utf-8 -*- 
-import nltk
+from nltk.data import path as nltk_data_path
 from nltk import load_parser, word_tokenize
 import pymorphy2 as pm
 import codecs
@@ -10,7 +10,7 @@ import codecs
 ## загружаем PyMorphy2
 m = pm.MorphAnalyzer()
 ## открываем (создаем)файл с грамматикой, куда будут записываться правила
-f = codecs.open("C:\\nltk_data\\grammars\\book_grammars\\test.fcfg", mode= "w", encoding = "utf-8")
+f = codecs.open("%s/grammars/book_grammars/test.fcfg" % nltk_data_path[0], mode= "w", encoding = "utf-8")
 ## записываем правила, которые вручную делаем (некоторые на основе правил из АОТ)
 
 f.writelines("% start XP\n")
@@ -134,7 +134,7 @@ f.close()
 ## принимает (токенизированное) словосочетание на входе, записывает правила (lexical productions) в тот же файл с грамматикой
 
 def pm2fcfg (phrase): ## phrase - это словосочетание, которое мы разбираем
-    f = codecs.open("C:\\nltk_data\\grammars\\book_grammars\\test.fcfg", mode= "a", encoding = "utf-8")
+    f = codecs.open("%s/grammars/book_grammars/test.fcfg" % nltk_data_path[0], mode= "a", encoding = "utf-8")
     for x in phrase:
         a = m.parse(x) ## a - список возможных вариантов морфологического разбора слова, предлагаемых пайморфи
 		## от части речи зависит, какие признаки отправляются в грамматику, осюда условия
@@ -178,8 +178,5 @@ words = word_tokenize(text.lower()) ## разбиваем словосочета
 pm2fcfg(words) ## запускаем функцию, описанную выше
 cp = load_parser('grammars/book_grammars/test.fcfg', trace=1) ## открываем нашу грамматику, смотрим на разбор в консоли или ещё где
 for tree in cp.parse(words):
-         print (tree)
-
-
-
+    print (tree)
 
